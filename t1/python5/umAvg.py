@@ -1,3 +1,6 @@
+#Helping bon?
+
+
 #adds and averages a list of inputs
 def sumAvg():
     total = 0

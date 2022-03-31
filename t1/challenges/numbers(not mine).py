@@ -9,8 +9,11 @@ def numbers():
 
 
     for row in range(size):
+
+
         for i in range(number, size + number):
-            print(i, end = "  ")
+
+            print(i + row, end = "  ")
 
         print(" ")
 

@@ -1,0 +1,79 @@
+BEGIN date_format
+    loop is true
+    WHILE loop = true
+
+
+        //Gets the dd/mm/yyyy input from user
+        print ----
+        print Enter a date in the dd/mm/yyyy format
+        print An example of this would be 25/03/2022
+        GET user input date
+
+
+        //checks if input length is 10.
+        //If not give an error and request a new input
+        WHILE date length != 10 THEN
+            print !-----ERROR-----!
+            print Invalid format
+            print -----------------
+            print Check your date is in the proper dd/mm/yyyy format
+            print Enter a date in the dd/mm/yyyy format
+            print An example of this would be 25/03/2022
+            GET user input date
+        ENDWHILE
+
+        month = 3 to 5 of date
+
+        WHILE month < 1 or month > 12 THEN
+            print !-----ERROR-----!
+            print  Invalid Month
+            print -----------------
+            print Check your month is between 1 and 12
+            print Enter a date in the dd/mm/yyyy format
+            print An example of this would be 25/03/2022
+            GET user input date
+            month = 3 to 5 of date
+        ENDWHILE
+
+        year = date [6:10]
+        //Doesn't display first character of day if it is a 0
+
+        IF date 0 = 0: THEN
+            day = date 1
+        ELSE
+            day = date 0 to 2
+        ENDIF
+        second_digit_of_day = date position 1
+
+        //Chooses an appropriate suffix
+        IF second_digit_of_day = 1 and day != 11 THEN
+            suffix = st
+        ELSE
+            IF second_digit_of_day == 2 and day != 12 THEN
+                suffix = "nd"
+            ELSE
+                IF second_digit_of_day == 3 and day != 13 THEN
+                    SUFFIX = "rd"
+                ELSE
+                    suffix = "th"
+                ENDIF
+            ENDIF
+        ENDIF
+
+        CASEWHERE month
+            1:month = January
+            12:month = December
+        OTHERWISE: month = Feb
+        ENDCASE
+        //prints this information as a sentence
+        print-----------------
+        print month + day + suffix + year
+        print ---------
+        print Would ypu like to rerun the program? (y/n)
+        get userinput loop
+        if loop = n
+            loop = false
+    ENDWHILE
+    print Goodbye. Thank you for using the date formater.
+END date_format
+
