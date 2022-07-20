@@ -1,20 +1,25 @@
 # NUMBER
-number = 60085147514
+import math
+number = 600851475143
+tnum = number
+tree = []
 
-def prime(num):
-    notprim = False
-
-    for i in range(2, int(num / 2 + 1)):
-
-        if num % i == 0:
-            notprim == True
-            return notprim
-    return notprim
+def check_prime(num):
+    prime = True
+    for i in range(2, num):
+        if num%i == 0:
+            prime = False
+    return prime
 
 
-def largenum(number):
-    for i in range(int(number / 2), 1, -1):
-        if number % i == 0
-            prime(i):
-            print(i)
-            break
+
+
+
+for i in range(2,number):
+    if check_prime(i):
+        while tnum % i == 0:
+            tree.append(i)
+            tnum = int(tnum/i)
+    if math.prod(tree) == number:
+        break
+print(tree)

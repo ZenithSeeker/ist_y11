@@ -9,3 +9,9 @@ for i in range(1, 101):
         print("FIZZBUZZ")
     else:
         print(i)
+
+
+
+def swap(item1, item2):
+    return item1, item2
+
