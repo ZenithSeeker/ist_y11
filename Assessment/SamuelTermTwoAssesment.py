@@ -8,7 +8,6 @@
 import time
 import random
 
-
 # ------------------------------------------------------------------------------#
 #  main()
 # ------------------------------------------------------------------------------#
@@ -21,14 +20,19 @@ def main():
     exit_flag = False
     # if password_check successfully verifies the user, the rest of the program
     # run
-    if passwordCheck("1234", 4):
+    if password_check("1234", 4):
         # menu returns True when the player wishes to exit, and thus the loop
-        # will brewk
+        # will break
         while not menu():
             pass
+        # This runs once the menu loop is ended, and the program is closing
+        print("------------------------------------------")
         print("Thank you for playing")
+    # If the password was not guessed, communicate this to the user
+    # before ending the program
     else:
-        print("There have been 4 incorrect attempts."
+        print("------------------------------------------")
+        print("There have been 4 incorrect attempts.\n"
               " The program will exit now")
 
 
@@ -53,18 +57,33 @@ def getboardsize():
 # ------------------------------------------------------------------------------#
 #  Purpose: The menu page for the program. Displays options to the user and
 #  calls various subroutines depending on the user's choices. Returns an exit
-#  flag which becomes true when the user wants to exit
+#  flag which becomes true when the user selects the exit option
 # ------------------------------------------------------------------------------#
 def menu():
     exit_flag = False
-    print("Welcome TO TIC-TAC-TOE")
-    print("imagine a delightful welcome screen right here")
-    print("You got 3 options\n"
-          "1. Player Vs Computer\n"
-          "2. Instructions\n"
-          "3. Exit")
+    print("------------------------------------------\n\n\n")
+    print(" _       __     __                             __\n"
+          "| |     / /__  / /________  ____ ___  ___     / /_____       \n"
+          "| | /| / / _ \/ / ___/ __ \/ __ `__ \/ _ \   / __/ __ \ \n"
+          "| |/ |/ /  __/ / /__/ /_/ / / / / / /  __/  / /_/ /_/ /      \n"
+          "|__/|__/\___/_/\___/\____/_/ /_/ /_/\___/___\__/\____/       \n"
+          " /_  __(_)____   /_  __/___ ______   /_  __/___  ___\n"
+          "  / / / / ___/    / / / __ `/ ___/    / / / __ \/ _ \ \n"
+          " / / / / /__     / / / /_/ / /__     / / / /_/ /  __/\n"
+          "/_/ /_/\___/    /_/  \__,_/\___/    /_/  \____/\___/\n\n\n")
+    print("------------------------------------------")
+    print("Please select one of the following\n"
+          "1. Instructions\n"
+          "2. Player Vs Comp\n"
+          "3. Player Vs Player\n"
+          "4. Comp Vs Comp\n"
+          "5. Exit"
+          )
+    print("------------------------------------------")
+
     answer = int(get_input_in_list(["1", "2", "3", "4", "5"], "Enter your choice here:"))
     if answer == 1:
+        print("------------------------------------------")
         display_text_file("instructions.txt")
 
     elif answer == 2:
@@ -74,7 +93,7 @@ def menu():
         size = getboardsize()
         player_player_game(size)
     elif answer == 4:
-        getboardsize()
+        size = getboardsize()
         computer_computer_game(size)
 
     else:
@@ -123,7 +142,9 @@ def circle_or_cross(value):
 #   password. The password must be a string, and numofguesses
 # ------------------------------------------------------------------------------#
 def password_check(password, numofguesses):
+    attempts = "attempts"
     verify = False
+    print("------------------------------------------")
     guess = input("Enter password here: ")
     while not verify and numofguesses > 0:
         if guess == password:
@@ -131,46 +152,125 @@ def password_check(password, numofguesses):
         else:
             numofguesses -= 1
             if numofguesses > 0:
+                print("------------------------------------------")
                 print("Incorrect Password")
-                print(f"{numofguesses} tries left")
+                if numofguesses == 1:
+                    attempts = "attempt"
+
+                print("You have " + str(numofguesses)
+                      + " " + attempts + " remaining")
+                print("------------------------------------------")
                 guess = input("Retry here: ")
     return verify
 
 
+def computer_computer_game(size):
+    board = [0] * size * size
+    game_over = False
+
+    print("-" * 70)
+
+    while not game_over:
+        print_grid(board, size)
+        print("It is Computer 1's turn")
+        print(".", end="")
+        time.sleep(0.6)
+        print(".", end="")
+        time.sleep(0.6)
+        print(".")
+        time.sleep(0.6)
+        board[computer_move(board, size)] = 1
+        print_grid(board, size)
+
+        if check_win(board, size) != 0:
+            game_over = True
+        else:
+            print("It is Computer 2's turn")
+            print(".", end="")
+            time.sleep(0.6)
+            print(".", end="")
+            time.sleep(0.6)
+            print(".")
+            time.sleep(0.6)
+            board[computer_move(board, size)] = -1
+            if check_win(board, size) != 0:
+                game_over = True
+                print_grid(board, size)
+    winner = check_win(board, size)
+    if winner == 1:
+        print("Computer 1 wins!")
+    elif winner == -1:
+        print("Computer 2 wins!")
+    else:
+        print("This game ended in a draw")
+
+
 def player_computer_game(size):
     board = [0] * size * size
-    game_won = False
+    game_over = False
     name = input("Please enter your name here: ")
 
     print("-" * 70)
 
-    while not game_won:
+    while not game_over:
         print_grid(board, size)
         board[get_user_move(name, board, size)] = 1
 
         print_grid(board, size)
         if check_win(board, size) != 0:
-            game_won = True
+            game_over = True
         else:
+            print("It is the computer's move")
+            time.sleep(0.6)
             print(".", end="")
-            time.sleep(1)
+            time.sleep(0.6)
             print(".", end="")
-            time.sleep(1)
+            time.sleep(0.6)
             print(".")
-            time.sleep(1)
+            time.sleep(0.6)
             board[computer_move(board, size)] = -1
+            if check_win(board, size) != 0:
+                game_over = True
+                print_grid(board, size)
     winner = check_win(board, size)
     if winner == 1:
-        print("THE WINNER IS " + winner)
+        print("You win " + name)
     else:
-        print("draw")
+        print("This game ended in a draw")
+
+
+def player_player_game(size):
+    board = [0] * size * size
+    game_over = False
+    player1 = input("Player 1 please enter your name here: ")
+    player2 = input("Player 2 please enter your name here: ")
+    print("-" * 70)
+
+    while not game_over:
+        print_grid(board, size)
+        board[get_user_move(player1, board, size)] = 1
+
+        print_grid(board, size)
+        if check_win(board, size) != 0:
+            game_over = True
+        else:
+            board[get_user_move(player2, board, size)] = -1
+            if check_win(board, size) != 0:
+                game_over = True
+                print_grid(board, size)
+    winner = check_win(board, size)
+    if winner == 1:
+        print(player1 + " wins!")
+    elif winner == -1:
+        print(player2 + " wins!")
+    else:
+        print("This game ended in a draw")
 
 
 def computer_move(board, size):
     move = random.randint(0, size * size - 1)
     while board[move] != 0:
         move = random.randint(0, size * size - 1)
-
     return move
 
 
@@ -191,13 +291,16 @@ def get_user_move(name, board, size):
 # ------------------------------------------------------------------------------#
 #  check_win(board, size)
 # ------------------------------------------------------------------------------#
+# Parameter types:
+# Name: board, Type: List, Array
+# Name: size, Type: Integer
+# ------------------------------------------------------------------------------#
 #  Purpose: Returns a integer based on the status of the game passed to the
 #  subroutine. Moves must be represented by a 1 or -1 for the respective
 #  players. Returns a 1 or -1 for a win by the player controlling that counter
 #  , a 0 for an incomplete game, and 999 for a full board with no winning moves
 #  signifying a draw.
 # ------------------------------------------------------------------------------#
-
 def check_win(board, size):
     board_full = True
     game_status = 0
@@ -237,6 +340,15 @@ def check_win(board, size):
     return game_status
 
 
+# ------------------------------------------------------------------------------#
+#  display_text_file(file_path):
+# ------------------------------------------------------------------------------#
+# Parameter types:
+# Name: file_path, Type: String
+# ------------------------------------------------------------------------------#
+#  Purpose: Opens the text file at the specified location and displays it to
+#  the user sequentially.
+# ------------------------------------------------------------------------------#
 def display_text_file(file_path):
     f = open(file_path, "r")
     for line in f:
@@ -245,6 +357,16 @@ def display_text_file(file_path):
     f.close()
 
 
+# ------------------------------------------------------------------------------#
+#  in_list(value, list_to_check)
+# ------------------------------------------------------------------------------#
+# Parameter types:
+# Name: value, Type: Any
+# Name: list_to_check, Type: List, Array
+# ------------------------------------------------------------------------------#
+#  Purpose: Checks if a given value is contained within a given list. Returns
+#  True if it is, and False if it is not.
+# ------------------------------------------------------------------------------#
 def in_list(value, list_to_check):
     in_list = False
     for i in range(len(list_to_check)):
@@ -254,20 +376,22 @@ def in_list(value, list_to_check):
 
 
 # ------------------------------------------------------------------------------#
-#   error_free_input(valid_values, user_prompt)
-#   Takes in a list of valid values and a user prompt as a string
-#   Gets an input from the user that is in the valid values list
-#
+#  get_input_in_list(valid_inputs_list, user_prompt)
+# ------------------------------------------------------------------------------#
+# Parameter types:
+# Name: valid_inputs_list, Type: List, Array
+# Name: user_prompt, Type: String
+# ------------------------------------------------------------------------------#
+#  Takes in a list of valid values and a user prompt. Uses the prompt to get an
+#  user input and if the input is not contained within the list of valid inputs
+#  a new user input is gained. This repeats until a valid input has been gained
 # ------------------------------------------------------------------------------#
 def get_input_in_list(valid_inputs_list, user_prompt):
     value = input(user_prompt)
     while not in_list(value, valid_inputs_list):
+        print("That is not a valid input. Please try again. ")
         value = input(user_prompt)
     return value
-
-
-def total():
-    pass
 
 
 main()
