@@ -3,7 +3,7 @@
 # ------------------------------------------------------------------------------#
 #  Purpose:
 #  Author: Samuel Pitchforth
-#  Date: 1/07/2020
+#  Date: 20/07/2020
 # ------------------------------------------------------------------------------#
 import time
 import random
@@ -12,8 +12,8 @@ import random
 # ------------------------------------------------------------------------------#
 #  main()
 # ------------------------------------------------------------------------------#
-#  Purpose: Highest level of program, calls subroutines and allows the code to
-# be run
+#  Purpose: Highest level of program, calls subroutines in the correct order.
+#  Running this
 # ------------------------------------------------------------------------------#
 def main():
     # when this flag is true, the user wants to leave, and the program loop will
@@ -22,13 +22,39 @@ def main():
     # if password_check successfully verifies the user, the rest of the program
     # run
     if passwordCheck("1234", 4):
+        # menu returns True when the player wishes to exit, and thus the loop
+        # will brewk
         while not menu():
             pass
         print("Thank you for playing")
     else:
-        print("There have been 4 incorrect attempts. The program will now exit")
+        print("There have been 4 incorrect attempts."
+              " The program will exit now")
 
 
+# ------------------------------------------------------------------------------#
+#  getboardsize()
+# ------------------------------------------------------------------------------#
+#  Purpose:Returns the user's desired board size as an int. This must be within
+#  the range 3-30 inclusive.
+# ------------------------------------------------------------------------------#
+def getboardsize():
+    list_of_valid_sizes = [""] * 50
+    for i in range(3, 31):
+        list_of_valid_sizes[i] = str(i)
+    size = int(get_input_in_list(list_of_valid_sizes,
+                                 'Enter a board size in the range 3-30'))
+
+    return size
+
+
+# ------------------------------------------------------------------------------#
+#  menu()
+# ------------------------------------------------------------------------------#
+#  Purpose: The menu page for the program. Displays options to the user and
+#  calls various subroutines depending on the user's choices. Returns an exit
+#  flag which becomes true when the user wants to exit
+# ------------------------------------------------------------------------------#
 def menu():
     exit_flag = False
     print("Welcome TO TIC-TAC-TOE")
@@ -37,23 +63,30 @@ def menu():
           "1. Player Vs Computer\n"
           "2. Instructions\n"
           "3. Exit")
-    answer = get_input_in_list(1, 3, "Enter your choice here:")
+    answer = int(get_input_in_list(["1", "2", "3", "4", "5"], "Enter your choice here:"))
     if answer == 1:
-        player_computer_game(get_input_in_list(2, 50, 'enter a board size betwen 2-50'))
-    elif answer == 2:
         display_text_file("instructions.txt")
+
+    elif answer == 2:
+        size = getboardsize()
+        player_computer_game(size)
+    elif answer == 3:
+        size = getboardsize()
+        player_player_game(size)
+    elif answer == 4:
+        getboardsize()
+        computer_computer_game(size)
+
     else:
         exit_flag = True
     return exit_flag
 
 
 # ------------------------------------------------------------------------------#
-#   printGrid()
-#   prints current status of the grid
+#  print_grid(board, size)
 # ------------------------------------------------------------------------------#
-
-
-
+#  Purpose: Displays the board to the user
+# ------------------------------------------------------------------------------#
 def print_grid(board, size):
     print("", end="   ")
     print()
@@ -66,6 +99,14 @@ def print_grid(board, size):
     print("-" * size * 4)
 
 
+# ------------------------------------------------------------------------------#
+#  circle_or_cross(value)
+# ------------------------------------------------------------------------------#
+#  Purpose: Returns a string of the symbol represented by the integer within
+#  the program. Passing it a -1 or 1 will return a "O" and a "X" respectively
+#  while any other value will result in a "-". This is used by the print_grid()
+#  function to get the conventional symbols used in the game.
+# ------------------------------------------------------------------------------#
 def circle_or_cross(value):
     if value == -1:
         symbol = "O"
@@ -77,11 +118,11 @@ def circle_or_cross(value):
 
 
 # ------------------------------------------------------------------------------#
-#   password_check(password, numofguesses, failuremsg)
+#   password_check(password, numofguesses)
 #   Verifies the user by giving them a number of attempts to input the correct
-#   password. 4 Incorrect guesses will cause the program to exit
+#   password. The password must be a string, and numofguesses
 # ------------------------------------------------------------------------------#
-def passwordCheck(password, numofguesses):
+def password_check(password, numofguesses):
     verify = False
     guess = input("Enter password here: ")
     while not verify and numofguesses > 0:
@@ -121,7 +162,8 @@ def player_computer_game(size):
     winner = check_win(board, size)
     if winner == 1:
         print("THE WINNER IS " + winner)
-    else:print("draw")
+    else:
+        print("draw")
 
 
 def computer_move(board, size):
@@ -133,20 +175,33 @@ def computer_move(board, size):
 
 
 def get_user_move(name, board, size):
-    valid_entries = [""]
-    for i in range(size*size):
+    valid_moves = [""] * size * size
+    for i in range(len(valid_moves)):
+        valid_moves[i] = str(i + 1)
 
     print("It is your turn " + name)
-    move = int(get_input_in_list(1, size * size + 1, "Move please: ")) - 1
+
+    move = int(get_input_in_list(valid_moves, "Move please: ")) - 1
     while board[move] != 0:
         print("sorry this square is already taken")
-        move = int(get_input_in_list(1, size * size + 1, "Move please: ")) - 1
+        move = int(get_input_in_list(valid_moves, "Move please: ")) - 1
     return move
 
+
+# ------------------------------------------------------------------------------#
+#  check_win(board, size)
+# ------------------------------------------------------------------------------#
+#  Purpose: Returns a integer based on the status of the game passed to the
+#  subroutine. Moves must be represented by a 1 or -1 for the respective
+#  players. Returns a 1 or -1 for a win by the player controlling that counter
+#  , a 0 for an incomplete game, and 999 for a full board with no winning moves
+#  signifying a draw.
+# ------------------------------------------------------------------------------#
 
 def check_win(board, size):
     board_full = True
     game_status = 0
+
     # check diagonal cases
     diagonal_total = 0
     other_diagonal_total = 0
@@ -174,7 +229,7 @@ def check_win(board, size):
         if column_counter[cell] == size or column_counter[cell] == size * -1:
             game_status = int(column_counter[cell] / size)
 
-    for i in range(size*size):
+    for i in range(size * size):
         if board[i] == 0:
             board_full = False
     if game_status == 0 and board_full:

@@ -1,0 +1,32 @@
+
+
+
+def calculatePercent(candidateVotes,candidatePercent, numOfCandidates,totalVotes):
+	for i in range(numOfCandidates):
+		candidatePercent[i] = round((/totalVotes),2)
+
+
+	return determineWinner()
+
+
+
+
+def determineWinner(candidatePercent, numOfCandidates):
+
+
+BEGIN determineWinner 
+	highest = candidatePercent(0#1)
+	FOR i = 0 TO candidatePercent:
+		IF 
+		ENDIF
+
+
+
+BEGIN calculatePercent(candidateVotes,candidatePercent, numOfCandidates,totalVotes)
+
+	FOR i = 1 TO numOfCandidates STEP 1 
+		candidatePercent(i) = 100 * candidateVotes(i) / totalVotes
+	NEXT i 
+	
+	RETURN determineWinner(candidatePercent, numOfCandidates)
+END 
