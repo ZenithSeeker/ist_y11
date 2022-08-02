@@ -342,7 +342,6 @@ def in_list(value, list_to_check):
             in_list = True
     return in_list
 
-
 # ------------------------------------------------------------------------------#
 #  get_input_in_list(valid_inputs_list, user_prompt)
 # ------------------------------------------------------------------------------#
