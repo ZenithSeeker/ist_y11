@@ -168,7 +168,19 @@ def password_check(password, numofguesses):
                 guess = input("Retry here: ")
     return verify
 
-
+# ------------------------------------------------------------------------------#
+#  tic_tac_toe_game(size, player1_is_comp, player2_is_comp)
+# ------------------------------------------------------------------------------#
+# Parameters:
+# size: the board size as an integer
+# player1_is_comp: boolean that decides if
+#
+# solo_computer: Boolean that changes messages slightly in the case of exactly
+#               one computer controlled player
+# ------------------------------------------------------------------------------#
+#  Purpose: Creates various visual elements relating to the computers turn
+#  and executes the computers move.
+# ------------------------------------------------------------------------------#
 def tic_tac_toe_game(size, player1_is_comp, player2_is_comp):
     board = [0] * size * size
     game_over = False
@@ -221,7 +233,20 @@ def tic_tac_toe_game(size, player1_is_comp, player2_is_comp):
     else:
         print("This game ended in a draw")
 
-
+# ------------------------------------------------------------------------------#
+#  computer_turn(comp_num, board, size, solo_computer)
+# ------------------------------------------------------------------------------#
+# Parameters:
+# comp_num: Int equal to 1 or 2. Changes certain messages to reflect which
+#           computer is under control, and which counter it places
+# board: the board to place the counters on
+# size: the board size as an integer
+# solo_computer: Boolean that changes messages slightly in the case of exactly
+#               one computer controlled player
+# ------------------------------------------------------------------------------#
+#  Purpose: Creates various visual elements relating to the computers turn
+#  and executes the computers move.
+# ------------------------------------------------------------------------------#
 def computer_turn(comp_num, board, size, solo_computer):
     print("------------------------------------------")
     if not solo_computer:
@@ -248,7 +273,19 @@ def computer_move(board, size):
         move = random.randint(0, size * size - 1)
     return move
 
-
+# ------------------------------------------------------------------------------#
+#  get_user_move(name, board, size)
+# ------------------------------------------------------------------------------#
+# Parameters:
+# name: A string that is used as the players name in messages to them
+# Name: size, Type: Integer
+# ------------------------------------------------------------------------------#
+#  Purpose: Returns a integer based on the status of the game passed to the
+#  subroutine. Moves must be represented by a 1 or -1 for the respective
+#  players. Returns a 1 or -1 for a win by the player controlling that counter
+#  , a 0 for an incomplete game, and 999 for a full board with no winning moves
+#  signifying a draw.
+# ------------------------------------------------------------------------------#
 def get_user_move(name, board, size):
     print("------------------------------------------")
     print("It is your turn " + name)
@@ -262,9 +299,9 @@ def get_user_move(name, board, size):
 # ------------------------------------------------------------------------------#
 #  check_win(board, size)
 # ------------------------------------------------------------------------------#
-# Parameter types:
-# Name: board, Type: List, Array
-# Name: size, Type: Integer
+# Parameters:
+# board: The board to check. Is a 1d array
+# size: the board dimension as an integer
 # ------------------------------------------------------------------------------#
 #  Purpose: Returns a integer based on the status of the game passed to the
 #  subroutine. Moves must be represented by a 1 or -1 for the respective
@@ -327,24 +364,6 @@ def display_text_file(file_path):
         # is this allowed?
         print(line.strip())
     f.close()
-
-
-# ------------------------------------------------------------------------------#
-#  in_list(value, list_to_check)
-# ------------------------------------------------------------------------------#
-# Parameter types:
-# Name: value, Type: Any
-# Name: list_to_check, Type: List, Array
-# ------------------------------------------------------------------------------#
-#  Purpose: Checks if a given value is contained within a given list. Returns
-#  True if it is, and False if it is not.
-# ------------------------------------------------------------------------------#
-def in_list(value, list_to_check):
-    in_list = False
-    for i in range(len(list_to_check)):
-        if value == list_to_check[i]:
-            in_list = True
-    return in_list
 
 
 # ------------------------------------------------------------------------------#
