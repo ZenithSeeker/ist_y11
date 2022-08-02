@@ -40,19 +40,19 @@ def main():
 
 
 # ------------------------------------------------------------------------------#
-#  getboardsize()
+#  get_board_size()
 # ------------------------------------------------------------------------------#
 #  Purpose:Returns the user's desired board size as an int. This must be within
 #  the range 3-30 inclusive.
 # ------------------------------------------------------------------------------#
-def getboardsize():
-    list_of_valid_sizes = [""] * 50
-    for i in range(3, 31):
-        list_of_valid_sizes[i] = str(i)
-
-    size = int(get_input_in_list(list_of_valid_sizes,
-                                 'Enter a board size in the range 3-30: '))
-
+def get_board_size():
+    valid_input = False
+    while not valid_input:
+        size = input('Enter a board size in the range 3-30: ')
+        if is_numeric(size):
+            size = int(size)
+            if 3 <= size <= 30:
+                valid_input = True
     return size
 
 
@@ -84,22 +84,25 @@ def menu():
           "5. Exit"
           )
 
-    answer = int(get_input_in_list(["1", "2", "3", "4", "5"], "Enter your choice here: "))
+    answer = get_int_input_in_range("Enter your choice here: ", 1, 5)
     if answer == 1:
         print("------------------------------------------")
         display_text_file("instructions.txt")
-
-    elif answer == 2:
-        size = getboardsize()
-        tic_tac_toe_game(size, player1_is_comp=False, player2_is_comp=True)
-    elif answer == 3:
-        size = getboardsize()
-        tic_tac_toe_game(size, player1_is_comp=False, player2_is_comp=False)
-    elif answer == 4:
-        size = getboardsize()
-        tic_tac_toe_game(size, player1_is_comp=True, player2_is_comp=True)
-    else:
+    elif answer == 5:
         exit_flag = True
+    else:
+        size = get_int_input_in_range("Enter a board size in the range 3-30: "
+                                      , 3, 30)
+        if answer == 2:
+            player1_is_comp = False
+            player2_is_comp = True
+        elif answer == 3:
+            player1_is_comp = False
+            player2_is_comp = False
+        else:
+            player1_is_comp = True
+            player2_is_comp = True
+        tic_tac_toe_game(size, player1_is_comp, player2_is_comp)
     return exit_flag
 
 
@@ -201,18 +204,22 @@ def tic_tac_toe_game(size, player1_is_comp, player2_is_comp):
     winner = check_win(board, size)
     if winner == 1:
         if player1_is_comp:
-            print("Computer 1 wins")
+            if solo_computer:
+                print("The computer wins!")
+            else:
+                print("Computer 1 wins!")
         else:
             print(namep1 + " wins!")
     elif winner == -1:
         if player2_is_comp:
-            print("Computer 2 wins")
+            if solo_computer:
+                print("The computer wins!")
+            else:
+                print("Computer 2 wins!")
         else:
             print(namep2 + " wins!")
     else:
         print("This game ended in a draw")
-
-
 
 
 def computer_turn(comp_num, board, size, solo_computer):
@@ -243,15 +250,12 @@ def computer_move(board, size):
 
 
 def get_user_move(name, board, size):
-    valid_moves = [""] * size * size
-    for i in range(len(valid_moves)):
-        valid_moves[i] = str(i + 1)
     print("------------------------------------------")
     print("It is your turn " + name)
-    move = int(get_input_in_list(valid_moves, "Enter move here: ")) - 1
+    move = get_int_input_in_range("Enter move here: ", 1, size * size) - 1
     while board[move] != 0:
         print("This square already has a counter in it. Please try again")
-        move = int(get_input_in_list(valid_moves, "Enter move here: ")) - 1
+        move = get_int_input_in_range("Enter move here: ", 1, size * size) - 1
     return move
 
 
@@ -285,20 +289,20 @@ def check_win(board, size):
         game_status = int(other_diagonal_total / size)
 
     # check rows
-    for square in range(len(board)):
-        if square % size == 0:
-            row_total = 0
-        row_total += board[square]
-        if row_total == size or row_total == size * -1:
+    for y in range(size):
+        row_total = 0
+        for x in range(size):
+            row_total += board[y * size + x]
+        if row_total == size or row_total == -size:
             game_status = int(row_total / size)
 
     # check columns
-    column_counter = [0] * size
-    for square in range(len(board)):
-        column_counter[square % size] += board[square]
-    for cell in range(len(column_counter)):
-        if column_counter[cell] == size or column_counter[cell] == size * -1:
-            game_status = int(column_counter[cell] / size)
+    for x in range(size):
+        column_total = 0
+        for y in range(size):
+            column_total += board[y * size + x]
+        if column_total == size or column_total == -size:
+            game_status = int(column_total / size)
 
     for i in range(size * size):
         if board[i] == 0:
@@ -342,6 +346,7 @@ def in_list(value, list_to_check):
             in_list = True
     return in_list
 
+
 # ------------------------------------------------------------------------------#
 #  get_input_in_list(valid_inputs_list, user_prompt)
 # ------------------------------------------------------------------------------#
@@ -353,16 +358,30 @@ def in_list(value, list_to_check):
 #  user input and if the input is not contained within the list of valid inputs
 #  a new user input is gained. This repeats until a valid input has been gained
 # ------------------------------------------------------------------------------#
-def get_input_in_list(valid_inputs_list, user_prompt):
-    print("------------------------------------------")
-    value = input(user_prompt)
 
-    while not in_list(value, valid_inputs_list):
+def get_int_input_in_range(prompt, min, max):
+    valid_input = False
+    first_guess = True
+    while not valid_input:
         print("------------------------------------------")
-        print("That is not a valid input. Please try again.")
-        value = input(user_prompt)
-    return value
+        if first_guess:
+            first_guess = False
+        else:
+            print("That is not a valid input. Please try again.")
+        user_input = input(prompt)
+        if is_numeric(user_input):
+            user_input = int(user_input)
+            if min <= user_input <= max:
+                valid_input = True
+    return user_input
 
+
+def is_numeric(text):
+    is_num = True
+    for i in range(len(text)):
+        if text[i] < "0" or text[i] > "9":
+            is_num = False
+    return is_num
 
 
 main()
