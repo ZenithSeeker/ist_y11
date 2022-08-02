@@ -1,7 +1,7 @@
 # ------------------------------------------------------------------------------#
 #  Tic Tac Toe Program
 # ------------------------------------------------------------------------------#
-#  Purpose:
+#  Purpose: Password protected game of tic-tac-toe
 #  Author: Samuel Pitchforth
 #  Date: 20/07/2020
 # ------------------------------------------------------------------------------#
@@ -24,8 +24,9 @@ def main():
     if password_check("1234", 4):
         # menu returns True when the player wishes to exit, and thus the loop
         # will break
-        while not menu():
-            pass
+        while not exit_flag:
+            exit_flag = menu()
+
         # This runs once the menu loop is ended, and the program is closing
         print("------------------------------------------")
         print("Thank you for playing")
@@ -34,7 +35,8 @@ def main():
     else:
         print("------------------------------------------")
         print("There have been 4 incorrect attempts.\n"
-              " The program will exit now")
+              "The program will exit now")
+        time.sleep(2)
 
 
 # ------------------------------------------------------------------------------#
@@ -47,8 +49,9 @@ def getboardsize():
     list_of_valid_sizes = [""] * 50
     for i in range(3, 31):
         list_of_valid_sizes[i] = str(i)
+
     size = int(get_input_in_list(list_of_valid_sizes,
-                                 'Enter a board size in the range 3-30'))
+                                 'Enter a board size in the range 3-30: '))
 
     return size
 
@@ -80,23 +83,21 @@ def menu():
           "4. Comp Vs Comp\n"
           "5. Exit"
           )
-    print("------------------------------------------")
 
-    answer = int(get_input_in_list(["1", "2", "3", "4", "5"], "Enter your choice here:"))
+    answer = int(get_input_in_list(["1", "2", "3", "4", "5"], "Enter your choice here: "))
     if answer == 1:
         print("------------------------------------------")
         display_text_file("instructions.txt")
 
     elif answer == 2:
         size = getboardsize()
-        player_computer_game(size)
+        tic_tac_toe_game(size, player1_is_comp=False, player2_is_comp=True)
     elif answer == 3:
         size = getboardsize()
-        player_player_game(size)
+        tic_tac_toe_game(size, player1_is_comp=False, player2_is_comp=False)
     elif answer == 4:
         size = getboardsize()
-        computer_computer_game(size)
-
+        tic_tac_toe_game(size, player1_is_comp=True, player2_is_comp=True)
     else:
         exit_flag = True
     return exit_flag
@@ -166,165 +167,72 @@ def password_check(password, numofguesses):
 
 
 def tic_tac_toe_game(size, player1_is_comp, player2_is_comp):
-
     board = [0] * size * size
     game_over = False
     if not player1_is_comp:
+        print("------------------------------------------")
         namep1 = input("Player 1 please enter your name here: ")
-    if not player1_is_comp:
+    if not player2_is_comp:
+        print("------------------------------------------")
         namep2 = input("Player 2 please enter your name here: ")
-    print("-" * 70)
+    print("------------------------------------------")
+
+    solo_computer = player1_is_comp ^ player2_is_comp
 
     while not game_over:
         print_grid(board, size)
         if player1_is_comp:
-            print("It is Computer 1's turn")
-            print(".", end="")
-            time.sleep(0.6)
-            print(".", end="")
-            time.sleep(0.6)
-            print(".")
-            time.sleep(0.6)
-            board[computer_move(board, size)] = 1
-            print_grid(board, size)
+            computer_turn(1, board, size, solo_computer)
         else:
-            print_grid(board, size)
             board[get_user_move(namep1, board, size)] = 1
 
-        print_grid(board, size)
         if check_win(board, size) != 0:
             game_over = True
         else:
+            print_grid(board, size)
             if player2_is_comp:
-                print("It is the computer's move")
-                time.sleep(0.6)
-                print(".", end="")
-                time.sleep(0.6)
-                print(".", end="")
-                time.sleep(0.6)
-                print(".")
-                time.sleep(0.6)
-                board[computer_move(board, size)] = -1
-            if check_win(board, size) != 0:
-                game_over = True
-                print_grid(board, size)
-        winner = check_win(board, size)
-        if winner == 1:
-            if not player1_is_comp:
-                print("You win " + namep1)
+                computer_turn(2, board, size, solo_computer)
             else:
-                print("Computer 1 wins")
-        elif winner == -1:
-            if not player1_is_comp:
-                print("You win " + namep2)
-            else:
-                print("Computer 2 wins")
-        else:
-            print("This game ended in a draw")
-
-
-
-def computer_computer_game(size):
-    board = [0] * size * size
-    game_over = False
-
-    print("-" * 70)
-
-    while not game_over:
-        print_grid(board, size)
-        print("It is Computer 1's turn")
-        print(".", end="")
-        time.sleep(0.6)
-        print(".", end="")
-        time.sleep(0.6)
-        print(".")
-        time.sleep(0.6)
-        board[computer_move(board, size)] = 1
-        print_grid(board, size)
-
+                board[get_user_move(namep2, board, size)] = -1
         if check_win(board, size) != 0:
             game_over = True
-        else:
-            print("It is Computer 2's turn")
-            print(".", end="")
-            time.sleep(0.6)
-            print(".", end="")
-            time.sleep(0.6)
-            print(".")
-            time.sleep(0.6)
-            board[computer_move(board, size)] = -1
-            if check_win(board, size) != 0:
-                game_over = True
-                print_grid(board, size)
+            print_grid(board, size)
+
     winner = check_win(board, size)
     if winner == 1:
-        print("Computer 1 wins!")
+        if player1_is_comp:
+            print("Computer 1 wins")
+        else:
+            print(namep1 + " wins!")
     elif winner == -1:
-        print("Computer 2 wins!")
-    else:
-        print("This game ended in a draw")
-
-
-def player_computer_game(size):
-    board = [0] * size * size
-    game_over = False
-    name = input("Please enter your name here: ")
-
-    print("-" * 70)
-
-    while not game_over:
-        print_grid(board, size)
-        board[get_user_move(name, board, size)] = 1
-
-        print_grid(board, size)
-        if check_win(board, size) != 0:
-            game_over = True
+        if player2_is_comp:
+            print("Computer 2 wins")
         else:
-            print("It is the computer's move")
-            time.sleep(0.6)
-            print(".", end="")
-            time.sleep(0.6)
-            print(".", end="")
-            time.sleep(0.6)
-            print(".")
-            time.sleep(0.6)
-            board[computer_move(board, size)] = -1
-            if check_win(board, size) != 0:
-                game_over = True
-                print_grid(board, size)
-    winner = check_win(board, size)
-    if winner == 1:
-        print("You win " + name)
+            print(namep2 + " wins!")
     else:
         print("This game ended in a draw")
 
 
-def player_player_game(size):
-    board = [0] * size * size
-    game_over = False
-    player1 = input("Player 1 please enter your name here: ")
-    player2 = input("Player 2 please enter your name here: ")
-    print("-" * 70)
 
-    while not game_over:
-        print_grid(board, size)
-        board[get_user_move(player1, board, size)] = 1
 
-        print_grid(board, size)
-        if check_win(board, size) != 0:
-            game_over = True
-        else:
-            board[get_user_move(player2, board, size)] = -1
-            if check_win(board, size) != 0:
-                game_over = True
-                print_grid(board, size)
-    winner = check_win(board, size)
-    if winner == 1:
-        print(player1 + " wins!")
-    elif winner == -1:
-        print(player2 + " wins!")
+def computer_turn(comp_num, board, size, solo_computer):
+    print("------------------------------------------")
+    if not solo_computer:
+        print("It is Computer " + str(comp_num) + "'s turn")
     else:
-        print("This game ended in a draw")
+        print("It is the computer's turn")
+    print("------------------------------------------")
+    print(".", end="")
+    time.sleep(0.4)
+    print(".", end="")
+    time.sleep(0.4)
+    print(".")
+    time.sleep(0.4)
+    if comp_num == 2:
+        counter = -1
+    else:
+        counter = 1
+    board[computer_move(board, size)] = counter
 
 
 def computer_move(board, size):
@@ -338,13 +246,12 @@ def get_user_move(name, board, size):
     valid_moves = [""] * size * size
     for i in range(len(valid_moves)):
         valid_moves[i] = str(i + 1)
-
+    print("------------------------------------------")
     print("It is your turn " + name)
-
-    move = int(get_input_in_list(valid_moves, "Move please: ")) - 1
+    move = int(get_input_in_list(valid_moves, "Enter move here: ")) - 1
     while board[move] != 0:
-        print("sorry this square is already taken")
-        move = int(get_input_in_list(valid_moves, "Move please: ")) - 1
+        print("This square already has a counter in it. Please try again")
+        move = int(get_input_in_list(valid_moves, "Enter move here: ")) - 1
     return move
 
 
@@ -371,6 +278,7 @@ def check_win(board, size):
     for i in range(size):
         diagonal_total += board[(size + 1) * i]
         other_diagonal_total += board[(i + 1) * (size - 1)]
+
     if diagonal_total == size or diagonal_total == size * -1:
         game_status = int(diagonal_total / size)
     if other_diagonal_total == size or other_diagonal_total == size * -1:
@@ -447,11 +355,15 @@ def in_list(value, list_to_check):
 #  a new user input is gained. This repeats until a valid input has been gained
 # ------------------------------------------------------------------------------#
 def get_input_in_list(valid_inputs_list, user_prompt):
+    print("------------------------------------------")
     value = input(user_prompt)
+
     while not in_list(value, valid_inputs_list):
-        print("That is not a valid input. Please try again. ")
+        print("------------------------------------------")
+        print("That is not a valid input. Please try again.")
         value = input(user_prompt)
     return value
+
 
 
 main()
