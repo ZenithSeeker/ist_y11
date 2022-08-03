@@ -38,24 +38,6 @@ def main():
               "The program will exit now")
         time.sleep(2)
 
-
-# ------------------------------------------------------------------------------#
-#  get_board_size()
-# ------------------------------------------------------------------------------#
-#  Purpose:Returns the user's desired board size as an int. This must be within
-#  the range 3-30 inclusive.
-# ------------------------------------------------------------------------------#
-def get_board_size():
-    valid_input = False
-    while not valid_input:
-        size = input('Enter a board size in the range 3-30: ')
-        if is_numeric(size):
-            size = int(size)
-            if 3 <= size <= 30:
-                valid_input = True
-    return size
-
-
 # ------------------------------------------------------------------------------#
 #  menu()
 # ------------------------------------------------------------------------------#
@@ -146,23 +128,23 @@ def circle_or_cross(value):
 #   Verifies the user by giving them a number of attempts to input the correct
 #   password. The password must be a string, and numofguesses
 # ------------------------------------------------------------------------------#
-def password_check(password, numofguesses):
+def password_check(password, num_of_guesses):
     attempts = "attempts"
     verify = False
     print("------------------------------------------")
     guess = input("Enter password here: ")
-    while not verify and numofguesses > 0:
+    while not verify and num_of_guesses > 0:
         if guess == password:
             verify = True
         else:
-            numofguesses -= 1
-            if numofguesses > 0:
+            num_of_guesses -= 1
+            if num_of_guesses > 0:
                 print("------------------------------------------")
                 print("Incorrect Password")
-                if numofguesses == 1:
+                if num_of_guesses == 1:
                     attempts = "attempt"
 
-                print("You have " + str(numofguesses)
+                print("You have " + str(num_of_guesses)
                       + " " + attempts + " remaining")
                 print("------------------------------------------")
                 guess = input("Retry here: ")
@@ -388,19 +370,19 @@ def get_int_input_in_range(prompt, min, max):
         else:
             print("That is not a valid input. Please try again.")
         user_input = input(prompt)
-        if is_numeric(user_input):
+        if is_digits_only(user_input):
             user_input = int(user_input)
             if min <= user_input <= max:
                 valid_input = True
     return user_input
 
 
-def is_numeric(text):
-    is_num = True
+def is_digits_only(text):
+    is_digits = True
     for i in range(len(text)):
         if text[i] < "0" or text[i] > "9":
-            is_num = False
-    return is_num
+            is_digits = False
+    return is_digits
 
 
 main()
