@@ -1,5 +1,110 @@
-Yo
-Line 2
-Line 3
-Line 4
-Line 5 and finished
+	
+|	Welcome to the tic-tac-toe instructions!
+|
+|                    RULES
+|		
+|       Tic-tac-toe takes place on a square
+|       shaped grid with two counter types. 
+|       The goal of tic-tac-toe is to make
+|       an unbroken line of counters across
+|       the board. This can happen on rows,
+|       columns and even diagonals. In both
+|       of the examples below the X player 
+|       has won.
+|
+|                --------------
+|                 | X | - | - | 
+|                --------------
+|                 | O | X | - | 
+|                --------------
+|                 | O | - | X | 
+|                --------------
+|              ------------------
+|              | O | X | 0 | - | 
+|              ------------------
+|              | - | X | - | - | 
+|              ------------------
+|              | - | X | - | - | 
+|              ------------------
+|              | - | X | - | 0 | 
+|              ------------------
+|
+|       Each of the 2 players have a different
+|       counter. They take turns placing these
+|       counters on empty spaces. If neither 
+|       player wins before the board fills up
+|       then it is a draw. Below is an example
+|       of two players drawing. 
+|
+|                --------------
+|                 | X | O | X | 
+|                --------------
+|                 | X | O | X | 
+|                --------------
+|                 | O | X | O | 
+|                --------------
+|
+|       To win, you must both create opportunites
+|       to win and block off the opponents
+|       attempts. In this example playing in the
+|       bottom middle is necessary to stop the 
+|       other player winning. 
+|
+|                --------------
+|                 | - | O | X | 
+|                --------------
+|                 | - | O | - | 
+|                --------------
+|                 | - | - | - | 
+|                --------------
+|
+|               USER INSTRUCTIONS
+|
+|       To select a menu choice, enter the corresponding
+|       number. Entering 2, 3 or 4 will start the 
+|       respective game type. Player Vs Comp lets you  			       
+|       play against a computer, Player Vs Player lets
+|       you play against your friend on the same device,
+|       and Comp Vs Comp lets you watch two computers 
+|       playing against each other. 
+|       
+|       Once starting, you will be prompted to enter
+|       a board size. This is a single number that is
+|       the length of one side of the board and can
+|       range from 3-30. Below are some examples of 
+|       different sizes. 
+|
+|       Size 3 
+|                --------------
+|                 | - | - | - | 
+|                --------------
+|                 | - | - | - | 
+|                --------------
+|                 | - | - | - | 
+|                --------------
+|       Size 4
+|              ------------------
+|              | - | - | - | - | 
+|              ------------------
+|              | - | - | - | - | 
+|              ------------------
+|              | - | - | - | - | 
+|              ------------------
+|              | - | - | - | - | 
+|              ------------------	
+|
+|       After entering a name, the game begins. 
+|       Make a move by typing the number corresponding
+|       to the tile you would like to place a tile on. 
+|       These numbers are counted from the top left.
+|       Below is a visualisation of this counting.
+|
+|                --------------
+|                 | 1 | 2 | 3 | 
+|                --------------
+|                 | 4 | 5 | 6 | 
+|                --------------
+|                 | 7 | 8 | 9 | 
+|                --------------
+|              
+|                   HAVE FUN!

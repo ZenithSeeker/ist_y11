@@ -12,10 +12,11 @@ import random
 # ------------------------------------------------------------------------------#
 #  main()
 # ------------------------------------------------------------------------------#
-#  Purpose: Highest level of program, calls subroutines in the correct order.
-#  Running this
+#  Purpose: Highest level of program, calls subroutines in the correct order
 # ------------------------------------------------------------------------------#
 def main():
+    break_line = "--------------------------------------------------------" \
+                 "---------------"
     # when this flag is true, the user wants to leave, and the program loop will
     # be bypassed
     exit_flag = False
@@ -28,15 +29,16 @@ def main():
             exit_flag = menu()
 
         # This runs once the menu loop is ended, and the program is closing
-        print("------------------------------------------")
+        print(break_line)
         print("Thank you for playing")
     # If the password was not guessed, communicate this to the user
     # before ending the program
     else:
-        print("------------------------------------------")
+        print(break_line)
         print("There have been 4 incorrect attempts.\n"
               "The program will exit now")
-        time.sleep(2)
+    time.sleep(2)
+
 
 # ------------------------------------------------------------------------------#
 #  menu()
@@ -46,35 +48,40 @@ def main():
 #  flag which becomes true when the user selects the exit option
 # ------------------------------------------------------------------------------#
 def menu():
+    break_line = "--------------------------------------------------------" \
+                 "---------------"
     exit_flag = False
-    print("------------------------------------------\n\n\n")
-    print(" _       __     __                             __\n"
-          "| |     / /__  / /________  ____ ___  ___     / /_____       \n"
-          "| | /| / / _ \/ / ___/ __ \/ __ `__ \/ _ \   / __/ __ \ \n"
-          "| |/ |/ /  __/ / /__/ /_/ / / / / / /  __/  / /_/ /_/ /      \n"
-          "|__/|__/\___/_/\___/\____/_/ /_/ /_/\___/___\__/\____/       \n"
-          " /_  __(_)____   /_  __/___ ______   /_  __/___  ___\n"
-          "  / / / / ___/    / / / __ `/ ___/    / / / __ \/ _ \ \n"
-          " / / / / /__     / / / /_/ / /__     / / / /_/ /  __/\n"
-          "/_/ /_/\___/    /_/  \__,_/\___/    /_/  \____/\___/\n\n\n")
-    print("------------------------------------------")
-    print("Please select one of the following\n"
-          "1. Instructions\n"
-          "2. Player Vs Comp\n"
-          "3. Player Vs Player\n"
-          "4. Comp Vs Comp\n"
-          "5. Exit"
+    print(break_line + "\n\n\n")
+    print("      _       __     __                             __\n"
+          "     | |     / /__  / /________  ____ ___  ___     / /_____       \n"
+          "     | | /| / / _ \/ / ___/ __ \/ __ `__ \/ _ \   / __/ __ \ \n"
+          "     | |/ |/ /  __/ / /__/ /_/ / / / / / /  __/  / /_/ /_/ /      \n"
+          "     |__/|__/\___/_/\___/\____/_/ /_/ /_/\___/___\__/\____/       \n"
+          "    /_  __(_)____   /_  __/___ ______   /_  __/___  ___\n"
+          "     / / / / ___/    / / / __ `/ ___/    / / / __ \/ _ \ \n"
+          "    / / / / /__     / / / /_/ / /__     / / / /_/ /  __/\n"
+          "   /_/ /_/\___/    /_/  \__,_/\___/    /_/  \____/\___/\n\n\n")
+    print(break_line)
+    print("Please choose one of the following:\n"
+          "    1. Instructions\n"
+          "    2. Player Vs Comp\n"
+          "    3. Player Vs Player\n"
+          "    4. Comp Vs Comp\n"
+          "    5. Exit"
           )
 
     answer = get_int_input_in_range("Enter your choice here: ", 1, 5)
     if answer == 1:
-        print("------------------------------------------")
+        print(break_line)
         display_text_file("instructions.txt")
     elif answer == 5:
         exit_flag = True
     else:
+        # If user starts a game get the size
         size = get_int_input_in_range("Enter a board size in the range 3-30: "
                                       , 3, 30)
+        # set the players to computers or human players according to the chosen
+        # gamemode
         if answer == 2:
             player1_is_comp = False
             player2_is_comp = True
@@ -84,6 +91,7 @@ def menu():
         else:
             player1_is_comp = True
             player2_is_comp = True
+        # Call the tic_tac_toe_game with the variables
         tic_tac_toe_game(size, player1_is_comp, player2_is_comp)
     return exit_flag
 
@@ -94,15 +102,19 @@ def menu():
 #  Purpose: Displays the board to the user
 # ------------------------------------------------------------------------------#
 def print_grid(board, size):
-    print("", end="   ")
+    space = "                 "
     print()
+    # loop over each row
     for y in range(size):
-        print("-" * (size * 4 + 2))
-        print(" | ", end="")
+        # print a horizontal bar
+        print(space + "-" * (size * 4 + 2))
+        # print a single vertical
+        print(space + " | ", end="")
+        # All in the same line, add the symbol and then another vertical bar
         for x in range(size):
             print(circle_or_cross(board[y * size + x]), end=" | ")
         print()
-    print("-" * size * 4)
+    print(space + "-" * (size * 4 + 2))
 
 
 # ------------------------------------------------------------------------------#
@@ -122,16 +134,18 @@ def circle_or_cross(value):
         symbol = "-"
     return symbol
 
-
 # ------------------------------------------------------------------------------#
-#   password_check(password, numofguesses)
-#   Verifies the user by giving them a number of attempts to input the correct
-#   password. The password must be a string, and numofguesses
+#   password_check(password, num_of_guesses)
+# ------------------------------------------------------------------------------#
+#  Purpose: Verifies the user by giving them a number of attempts to input the
+#  correct password.
 # ------------------------------------------------------------------------------#
 def password_check(password, num_of_guesses):
+    break_line = "--------------------------------------------------------" \
+                 "---------------"
     attempts = "attempts"
     verify = False
-    print("------------------------------------------")
+    print(break_line)
     guess = input("Enter password here: ")
     while not verify and num_of_guesses > 0:
         if guess == password:
@@ -139,45 +153,45 @@ def password_check(password, num_of_guesses):
         else:
             num_of_guesses -= 1
             if num_of_guesses > 0:
-                print("------------------------------------------")
+                print(break_line)
                 print("Incorrect Password")
                 if num_of_guesses == 1:
                     attempts = "attempt"
 
                 print("You have " + str(num_of_guesses)
                       + " " + attempts + " remaining")
-                print("------------------------------------------")
+                print(break_line)
                 guess = input("Retry here: ")
     return verify
+
 
 # ------------------------------------------------------------------------------#
 #  tic_tac_toe_game(size, player1_is_comp, player2_is_comp)
 # ------------------------------------------------------------------------------#
-# Parameters:
-# size: the board size as an integer
-# player1_is_comp: boolean that decides if
-#
-# solo_computer: Boolean that changes messages slightly in the case of exactly
-#               one computer controlled player
-# ------------------------------------------------------------------------------#
-#  Purpose: Creates various visual elements relating to the computers turn
-#  and executes the computers move.
+#  Purpose: Runs the main game loop and calls the relevant submodules
 # ------------------------------------------------------------------------------#
 def tic_tac_toe_game(size, player1_is_comp, player2_is_comp):
+    break_line = "--------------------------------------------------------" \
+                 "---------------"
     board = [0] * size * size
     game_over = False
+    # If it is a person, get their name
     if not player1_is_comp:
-        print("------------------------------------------")
+        print(break_line)
         namep1 = input("Player 1 please enter your name here: ")
+    # If it is a person, get their name
     if not player2_is_comp:
-        print("------------------------------------------")
+        print(break_line)
         namep2 = input("Player 2 please enter your name here: ")
-    print("------------------------------------------")
+    print(break_line)
 
+    # XOR operator. solo_computer is only true if exactly one player is
+    # a computer
     solo_computer = player1_is_comp ^ player2_is_comp
 
     while not game_over:
         print_grid(board, size)
+        # Player 1's turn
         if player1_is_comp:
             computer_turn(1, board, size, solo_computer)
         else:
@@ -185,12 +199,15 @@ def tic_tac_toe_game(size, player1_is_comp, player2_is_comp):
 
         if check_win(board, size) != 0:
             game_over = True
+        # This stops player 2 having a go if the game ends here
         else:
+            # Player 2's turn
             print_grid(board, size)
             if player2_is_comp:
                 computer_turn(2, board, size, solo_computer)
             else:
                 board[get_user_move(namep2, board, size)] = -1
+
         if check_win(board, size) != 0:
             game_over = True
             print_grid(board, size)
@@ -215,6 +232,7 @@ def tic_tac_toe_game(size, player1_is_comp, player2_is_comp):
     else:
         print("This game ended in a draw")
 
+
 # ------------------------------------------------------------------------------#
 #  computer_turn(comp_num, board, size, solo_computer)
 # ------------------------------------------------------------------------------#
@@ -230,12 +248,14 @@ def tic_tac_toe_game(size, player1_is_comp, player2_is_comp):
 #  and executes the computers move.
 # ------------------------------------------------------------------------------#
 def computer_turn(comp_num, board, size, solo_computer):
-    print("------------------------------------------")
+    break_line = "--------------------------------------------------------" \
+                 "---------------"
+    print(break_line)
     if not solo_computer:
         print("It is Computer " + str(comp_num) + "'s turn")
     else:
         print("It is the computer's turn")
-    print("------------------------------------------")
+    print(break_line)
     print(".", end="")
     time.sleep(0.4)
     print(".", end="")
@@ -248,28 +268,27 @@ def computer_turn(comp_num, board, size, solo_computer):
         counter = 1
     board[computer_move(board, size)] = counter
 
-
+# ------------------------------------------------------------------------------#
+#  computer_move(board, size)
+# ------------------------------------------------------------------------------#
+#  Purpose: Generate computer move
+# ------------------------------------------------------------------------------#
 def computer_move(board, size):
     move = random.randint(0, size * size - 1)
     while board[move] != 0:
         move = random.randint(0, size * size - 1)
     return move
 
+
 # ------------------------------------------------------------------------------#
 #  get_user_move(name, board, size)
 # ------------------------------------------------------------------------------#
-# Parameters:
-# name: A string that is used as the players name in messages to them
-# Name: size, Type: Integer
-# ------------------------------------------------------------------------------#
-#  Purpose: Returns a integer based on the status of the game passed to the
-#  subroutine. Moves must be represented by a 1 or -1 for the respective
-#  players. Returns a 1 or -1 for a win by the player controlling that counter
-#  , a 0 for an incomplete game, and 999 for a full board with no winning moves
-#  signifying a draw.
+#  Purpose: Get the users move
 # ------------------------------------------------------------------------------#
 def get_user_move(name, board, size):
-    print("------------------------------------------")
+    break_line = "--------------------------------------------------------" \
+                 "---------------"
+    print(break_line)
     print("It is your turn " + name)
     move = get_int_input_in_range("Enter move here: ", 1, size * size) - 1
     while board[move] != 0:
@@ -299,19 +318,27 @@ def check_win(board, size):
     diagonal_total = 0
     other_diagonal_total = 0
     for i in range(size):
+        # Adds up each diagonal
+        # The diagonals increment at n+1 and n-1 respectively.
         diagonal_total += board[(size + 1) * i]
         other_diagonal_total += board[(i + 1) * (size - 1)]
 
-    if diagonal_total == size or diagonal_total == size * -1:
+    # Equal absolute value size means that diagonal is one type of counter only
+    if diagonal_total == size or diagonal_total == -size:
+        # Find which counter it is
         game_status = int(diagonal_total / size)
-    if other_diagonal_total == size or other_diagonal_total == size * -1:
+
+    if other_diagonal_total == size or other_diagonal_total == -size:
         game_status = int(other_diagonal_total / size)
 
-    # check rows
+    # check each rows
     for y in range(size):
         row_total = 0
         for x in range(size):
+            # for each value in row, add to total
+            # multiply size with y to get the right row and add x to move along
             row_total += board[y * size + x]
+        # Equalling absolute value size means one type of counter only
         if row_total == size or row_total == -size:
             game_status = int(row_total / size)
 
@@ -319,6 +346,7 @@ def check_win(board, size):
     for x in range(size):
         column_total = 0
         for y in range(size):
+            # for each value in column, add to total
             column_total += board[y * size + x]
         if column_total == size or column_total == -size:
             game_status = int(column_total / size)
@@ -361,10 +389,13 @@ def display_text_file(file_path):
 # ------------------------------------------------------------------------------#
 
 def get_int_input_in_range(prompt, min, max):
+    break_line = "--------------------------------------------------------" \
+                 "---------------"
     valid_input = False
     first_guess = True
     while not valid_input:
-        print("------------------------------------------")
+        print(break_line)
+        # Error message doesn't print first time through
         if first_guess:
             first_guess = False
         else:
@@ -376,12 +407,20 @@ def get_int_input_in_range(prompt, min, max):
                 valid_input = True
     return user_input
 
-
+# ------------------------------------------------------------------------------#
+#  is_digits_only(text)
+# ------------------------------------------------------------------------------#
+#  Purpose: Returns a boolean representing if the string passed to it is made
+#  up of exclusively digits
+# ------------------------------------------------------------------------------#
 def is_digits_only(text):
     is_digits = True
     for i in range(len(text)):
+        #check each character to see if its a digit
         if text[i] < "0" or text[i] > "9":
             is_digits = False
+    if text == "":
+        is_digits = False
     return is_digits
 
 
