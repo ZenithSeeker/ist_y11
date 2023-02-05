@@ -3,11 +3,16 @@
 # ------------------------------------------------------------------------------#
 #  Purpose: Password protected game of tic-tac-toe
 #  Author: Samuel Pitchforth
-#  Date: 20/07/2020
+#  Date: 12/08/2022
 # ------------------------------------------------------------------------------#
 import time
 import random
 
+
+# Used often for formatting purposes. Making this global makes future
+# changes to formatting far easier as only one thing must be changed
+break_line = "--------------------------------------------------------" \
+                 "---------------"
 
 # ------------------------------------------------------------------------------#
 #  main()
@@ -15,10 +20,6 @@ import random
 #  Purpose: Highest level of program, calls subroutines in the correct order
 # ------------------------------------------------------------------------------#
 def main():
-    break_line = "--------------------------------------------------------" \
-                 "---------------"
-    # when this flag is true, the user wants to leave, and the program loop will
-    # be bypassed
     exit_flag = False
     # if password_check successfully verifies the user, the rest of the program
     # run
@@ -28,7 +29,6 @@ def main():
         while not exit_flag:
             exit_flag = menu()
 
-        # This runs once the menu loop is ended, and the program is closing
         print(break_line)
         print("Thank you for playing")
     # If the password was not guessed, communicate this to the user
@@ -37,6 +37,7 @@ def main():
         print(break_line)
         print("There have been 4 incorrect attempts.\n"
               "The program will exit now")
+    # Gives time for user to read the exit messages
     time.sleep(2)
 
 
@@ -48,9 +49,8 @@ def main():
 #  flag which becomes true when the user selects the exit option
 # ------------------------------------------------------------------------------#
 def menu():
-    break_line = "--------------------------------------------------------" \
-                 "---------------"
     exit_flag = False
+    # Display welcome graphic
     print(break_line + "\n\n\n")
     print("      _       __     __                             __\n"
           "     | |     / /__  / /________  ____ ___  ___     / /_____       \n"
@@ -113,7 +113,9 @@ def print_grid(board, size):
         # All in the same line, add the symbol and then another vertical bar
         for x in range(size):
             print(circle_or_cross(board[y * size + x]), end=" | ")
+        # End the previous line
         print()
+    # print a horizontal bar
     print(space + "-" * (size * 4 + 2))
 
 
@@ -134,6 +136,7 @@ def circle_or_cross(value):
         symbol = "-"
     return symbol
 
+
 # ------------------------------------------------------------------------------#
 #   password_check(password, num_of_guesses)
 # ------------------------------------------------------------------------------#
@@ -141,12 +144,13 @@ def circle_or_cross(value):
 #  correct password.
 # ------------------------------------------------------------------------------#
 def password_check(password, num_of_guesses):
-    break_line = "--------------------------------------------------------" \
-                 "---------------"
-    attempts = "attempts"
+    is_plural = True
     verify = False
+    password = str(password)
+
     print(break_line)
     guess = input("Enter password here: ")
+
     while not verify and num_of_guesses > 0:
         if guess == password:
             verify = True
@@ -156,10 +160,9 @@ def password_check(password, num_of_guesses):
                 print(break_line)
                 print("Incorrect Password")
                 if num_of_guesses == 1:
-                    attempts = "attempt"
-
+                    is_plural = False
                 print("You have " + str(num_of_guesses)
-                      + " " + attempts + " remaining")
+                      + " attempt" + "s" * is_plural + " remaining")
                 print(break_line)
                 guess = input("Retry here: ")
     return verify
@@ -171,8 +174,6 @@ def password_check(password, num_of_guesses):
 #  Purpose: Runs the main game loop and calls the relevant submodules
 # ------------------------------------------------------------------------------#
 def tic_tac_toe_game(size, player1_is_comp, player2_is_comp):
-    break_line = "--------------------------------------------------------" \
-                 "---------------"
     board = [0] * size * size
     game_over = False
     # If it is a person, get their name
@@ -248,8 +249,6 @@ def tic_tac_toe_game(size, player1_is_comp, player2_is_comp):
 #  and executes the computers move.
 # ------------------------------------------------------------------------------#
 def computer_turn(comp_num, board, size, solo_computer):
-    break_line = "--------------------------------------------------------" \
-                 "---------------"
     print(break_line)
     if not solo_computer:
         print("It is Computer " + str(comp_num) + "'s turn")
@@ -267,6 +266,7 @@ def computer_turn(comp_num, board, size, solo_computer):
     else:
         counter = 1
     board[computer_move(board, size)] = counter
+
 
 # ------------------------------------------------------------------------------#
 #  computer_move(board, size)
@@ -286,8 +286,6 @@ def computer_move(board, size):
 #  Purpose: Get the users move
 # ------------------------------------------------------------------------------#
 def get_user_move(name, board, size):
-    break_line = "--------------------------------------------------------" \
-                 "---------------"
     print(break_line)
     print("It is your turn " + name)
     move = get_int_input_in_range("Enter move here: ", 1, size * size) - 1
@@ -331,7 +329,7 @@ def check_win(board, size):
     if other_diagonal_total == size or other_diagonal_total == -size:
         game_status = int(other_diagonal_total / size)
 
-    # check each rows
+    # check each row
     for y in range(size):
         row_total = 0
         for x in range(size):
@@ -370,8 +368,8 @@ def check_win(board, size):
 # ------------------------------------------------------------------------------#
 def display_text_file(file_path):
     f = open(file_path, "r")
+    # Iterate over each line in the file
     for line in f:
-        # is this allowed?
         print(line.strip())
     f.close()
 
@@ -389,8 +387,6 @@ def display_text_file(file_path):
 # ------------------------------------------------------------------------------#
 
 def get_int_input_in_range(prompt, min, max):
-    break_line = "--------------------------------------------------------" \
-                 "---------------"
     valid_input = False
     first_guess = True
     while not valid_input:
@@ -401,11 +397,13 @@ def get_int_input_in_range(prompt, min, max):
         else:
             print("That is not a valid input. Please try again.")
         user_input = input(prompt)
+
         if is_digits_only(user_input):
             user_input = int(user_input)
             if min <= user_input <= max:
                 valid_input = True
     return user_input
+
 
 # ------------------------------------------------------------------------------#
 #  is_digits_only(text)
@@ -414,11 +412,13 @@ def get_int_input_in_range(prompt, min, max):
 #  up of exclusively digits
 # ------------------------------------------------------------------------------#
 def is_digits_only(text):
+    text = str(text)
     is_digits = True
     for i in range(len(text)):
-        #check each character to see if its a digit
+        # checks each character to see if it's a digit
         if text[i] < "0" or text[i] > "9":
             is_digits = False
+    # If string is empty it is not a valid int
     if text == "":
         is_digits = False
     return is_digits
